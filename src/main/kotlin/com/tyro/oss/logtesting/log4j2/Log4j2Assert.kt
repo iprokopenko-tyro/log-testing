@@ -47,6 +47,15 @@ class Log4j2Assert(actual: List<LogEvent>) : LogAssert<Log4j2Assert, Level, LogE
     override fun hasInfoContaining(vararg messages: String) =
             hasEventContaining(INFO, *messages)
 
+    override fun hasInfoContaining(throwable: Throwable, vararg messages: String): Log4j2Assert =
+            hasEventContaining(INFO, throwable, *messages)
+
+    override fun hasInfoContaining(throwableClass: Class<out Throwable>, vararg messages: String): Log4j2Assert =
+            hasEventContaining(INFO, throwableClass, *messages)
+
+    override fun hasInfoContaining(throwableClass: KClass<out Throwable>, vararg messages: String): Log4j2Assert =
+            hasEventContaining(INFO, throwableClass.java, *messages)
+
     override fun hasInfoMatching(regex: Regex) =
             hasEventMatching(INFO, regex)
 
@@ -95,6 +104,15 @@ class Log4j2Assert(actual: List<LogEvent>) : LogAssert<Log4j2Assert, Level, LogE
     override fun hasWarnContaining(vararg messages: String) =
             hasEventContaining(WARN, *messages)
 
+    override fun hasWarnContaining(throwable: Throwable, vararg messages: String): Log4j2Assert =
+            hasEventContaining(WARN, throwable, *messages)
+
+    override fun hasWarnContaining(throwableClass: Class<out Throwable>, vararg messages: String): Log4j2Assert =
+            hasEventContaining(WARN, throwableClass, *messages)
+
+    override fun hasWarnContaining(throwableClass: KClass<out Throwable>, vararg messages: String): Log4j2Assert =
+            hasEventContaining(WARN, throwableClass.java, *messages)
+
     override fun hasWarnMatching(regex: Regex) =
             hasEventMatching(WARN, regex)
 
@@ -142,6 +160,15 @@ class Log4j2Assert(actual: List<LogEvent>) : LogAssert<Log4j2Assert, Level, LogE
 
     override fun hasErrorContaining(vararg messages: String) =
             hasEventContaining(ERROR, *messages)
+
+    override fun hasErrorContaining(throwable: Throwable, vararg messages: String): Log4j2Assert =
+            hasEventContaining(ERROR, throwable, *messages)
+
+    override fun hasErrorContaining(throwableClass: Class<out Throwable>, vararg messages: String): Log4j2Assert =
+            hasEventContaining(ERROR, throwableClass, *messages)
+
+    override fun hasErrorContaining(throwableClass: KClass<out Throwable>, vararg messages: String): Log4j2Assert =
+            hasEventContaining(ERROR, throwableClass.java, *messages)
 
     override fun hasErrorMatching(regex: Regex) =
             hasEventMatching(ERROR, regex)
@@ -203,6 +230,21 @@ class Log4j2Assert(actual: List<LogEvent>) : LogAssert<Log4j2Assert, Level, LogE
             hasEvent("$level message containing ${messages.contentToString()}") {
                 withLevel(level)(it)
                     && withMessageContaining(messages)(it) }
+
+    override fun hasEventContaining(level: Level, throwable: Throwable, vararg messages: String): Log4j2Assert =
+            hasEvent("$level message containing ${messages.contentToString()}") {
+                withLevel(level)(it)
+                        && withMessageContaining(messages)(it)
+                        && withThrowable(throwable)(it) }
+
+    override fun hasEventContaining(level: Level, throwableClass: Class<out Throwable>, vararg messages: String): Log4j2Assert =
+            hasEvent("$level message containing ${messages.contentToString()}") {
+                withLevel(level)(it)
+                        && withMessageContaining(messages)(it)
+                        && withThrowableClass(throwableClass)(it) }
+
+    override fun hasEventContaining(level: Level, throwableClass: KClass<out Throwable>, vararg messages: String): Log4j2Assert =
+            hasEventContaining(level, throwableClass.java, *messages    )
 
     override fun hasEventMatching(level: Level, regex: Regex) =
             hasEvent("$level message matching: $regex") {

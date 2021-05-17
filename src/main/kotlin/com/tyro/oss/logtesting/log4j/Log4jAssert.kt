@@ -47,6 +47,15 @@ class Log4jAssert(actual: List<LoggingEvent>) : LogAssert<Log4jAssert, Level, Lo
     override fun hasInfoContaining(vararg messages: String): Log4jAssert =
             hasEventContaining(Level.INFO, *messages)
 
+    override fun hasInfoContaining(throwable: Throwable, vararg messages: String): Log4jAssert =
+            hasEventContaining(Level.INFO, throwable = throwable, *messages)
+
+    override fun hasInfoContaining(throwableClass: Class<out Throwable>, vararg messages: String): Log4jAssert =
+            hasEventContaining(Level.INFO, throwableClass = throwableClass, *messages)
+
+    override fun hasInfoContaining(throwableClass: KClass<out Throwable>, vararg messages: String): Log4jAssert =
+            hasEventContaining(Level.INFO, throwableClass = throwableClass.java, *messages)
+
     override fun hasInfoMatching(regex: Regex): Log4jAssert =
             hasEventMatching(Level.INFO, regex)
 
@@ -95,6 +104,15 @@ class Log4jAssert(actual: List<LoggingEvent>) : LogAssert<Log4jAssert, Level, Lo
     override fun hasWarnContaining(vararg messages: String): Log4jAssert =
             hasEventContaining(Level.WARN, *messages)
 
+    override fun hasWarnContaining(throwable: Throwable, vararg messages: String): Log4jAssert =
+            hasEventContaining(Level.WARN, throwable, *messages)
+
+    override fun hasWarnContaining(throwableClass: Class<out Throwable>, vararg messages: String): Log4jAssert =
+            hasEventContaining(Level.WARN, throwableClass, *messages)
+
+    override fun hasWarnContaining(throwableClass: KClass<out Throwable>, vararg messages: String): Log4jAssert =
+            hasEventContaining(Level.WARN, throwableClass.java, *messages)
+
     override fun hasWarnMatching(regex: Regex): Log4jAssert =
             hasEventMatching(Level.WARN, regex)
 
@@ -142,6 +160,15 @@ class Log4jAssert(actual: List<LoggingEvent>) : LogAssert<Log4jAssert, Level, Lo
 
     override fun hasErrorContaining(vararg messages: String): Log4jAssert =
             hasEventContaining(Level.ERROR, *messages)
+
+    override fun hasErrorContaining(throwable: Throwable, vararg messages: String): Log4jAssert =
+            hasEventContaining(Level.ERROR, throwable, *messages)
+
+    override fun hasErrorContaining(throwableClass: Class<out Throwable>, vararg messages: String): Log4jAssert =
+            hasEventContaining(Level.ERROR, throwableClass, *messages)
+
+    override fun hasErrorContaining(throwableClass: KClass<out Throwable>, vararg messages: String): Log4jAssert =
+            hasEventContaining(Level.ERROR, throwableClass.java, *messages)
 
     override fun hasErrorMatching(regex: Regex): Log4jAssert =
             hasEventMatching(Level.ERROR, regex)
@@ -203,6 +230,21 @@ class Log4jAssert(actual: List<LoggingEvent>) : LogAssert<Log4jAssert, Level, Lo
             hasEvent("$level message containing ${messages.contentToString()}") {
                 withLevel(level)(it)
                     && withMessageContaining(messages)(it) }
+
+    override fun hasEventContaining(level: Level, throwable: Throwable, vararg messages: String): Log4jAssert =
+            hasEvent("$level message containing ${messages.contentToString()}") {
+                withLevel(level)(it)
+                        && withMessageContaining(messages)(it)
+                        && withThrowable(throwable)(it) }
+
+    override fun hasEventContaining(level: Level, throwableClass: Class<out Throwable>, vararg messages: String): Log4jAssert =
+            hasEvent("$level message containing ${messages.contentToString()}") {
+                withLevel(level)(it)
+                        && withMessageContaining(messages)(it)
+                        && withThrowableClass(throwableClass)(it) }
+
+    override fun hasEventContaining(level: Level, throwableClass: KClass<out Throwable>, vararg messages: String): Log4jAssert =
+            hasEventContaining(level, throwableClass.java, *messages)
 
     override fun hasEventMatching(level: Level, regex: Regex): Log4jAssert =
             hasEvent("$level message matching: $regex") {
